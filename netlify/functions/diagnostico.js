@@ -32,7 +32,7 @@ Restricciones de Estilo: No usar negritas ni ## ni asteriscos como viñetas. No 
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ profileUrls: [linkedinUrl] }),
+        body: JSON.stringify({ queries: [linkedinUrl], profileScraperMode: "Profile details no email ($4 per 1k)" }),
       }
     );
 
