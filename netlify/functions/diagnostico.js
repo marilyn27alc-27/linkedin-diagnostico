@@ -48,11 +48,11 @@ Restricciones de Estilo: No usar negritas ni ## ni asteriscos como viñetas. No 
 
     // 1. Iniciar actor de Apify
     const runRes = await fetch(
-      `https://api.apify.com/v2/acts/curious_coder~linkedin-profile-scraper/runs?token=${APIFY_TOKEN}`,
+      `https://api.apify.com/v2/acts/harvestapi~linkedin-profile-scraper/runs?token=${APIFY_TOKEN}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ startUrls: [{ url: linkedinUrl }],
+        body: JSON.stringify({ profileUrls: [linkedinUrl],
       }
     );
 
