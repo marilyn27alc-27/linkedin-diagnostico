@@ -1,5 +1,9 @@
 [functions]
   directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[functions.diagnostico]
+  timeout = 26
 
 [build]
   publish = "public"
