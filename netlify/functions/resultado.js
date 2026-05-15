@@ -86,6 +86,41 @@ Restricciones de Estilo:
 - Extensión equilibrada por sección: ni muy breve ni muy larga
 - No incluir frases como "Aquí tienes tu diagnóstico" ni similares`;
 
+  // Helper: extrae solo los campos clave de cada experiencia (máx N entradas)
+  function resumeExperience(list, max = 5) {
+    if (!Array.isArray(list)) return "No disponible";
+    return list.slice(0, max).map((e) => ({
+      titulo: e.title || e.jobTitle || "",
+      empresa: e.companyName || e.company || "",
+      descripcion: (e.description || e.summary || "").slice(0, 300),
+      duracion: e.duration || e.dateRange || "",
+    }));
+  }
+
+  // Helper: extrae solo los campos clave de educación (máx N entradas)
+  function resumeEducation(list, max = 3) {
+    if (!Array.isArray(list)) return "No disponible";
+    return list.slice(0, max).map((e) => ({
+      titulo: e.fieldOfStudy || e.degree || e.degreeName || "",
+      institucion: e.schoolName || e.school || "",
+      fecha: e.dateRange || e.endDate || "",
+    }));
+  }
+
+  // Helper: extrae solo nombres de aptitudes (máx N)
+  function resumeSkills(list, max = 15) {
+    if (!Array.isArray(list)) return "No disponible";
+    return list.slice(0, max).map((s) => s.name || s.skill || s).join(", ");
+  }
+
+  // Helper: extrae texto de recomendaciones (máx N)
+  function resumeRecommendations(list, max = 3) {
+    if (!Array.isArray(list) || list.length === 0) return "Empty";
+    return list.slice(0, max).map((r) => ({
+      texto: (r.description || r.text || r.recommendation || "").slice(0, 400),
+    }));
+  }
+
   try {
     const { runId } = JSON.parse(event.body);
 
@@ -118,16 +153,22 @@ Restricciones de Estilo:
       ? profile.firstName + " " + profile.lastName
       : profile.fullName || profile.name || "No disponible";
 
+    // Resumen comprimido — solo lo que Claude necesita para el diagnóstico
+    const experienciaRaw = profile.experience || profile.positions || [];
+    const educacionRaw = profile.education || profile.educations || [];
+    const aptitudesRaw = profile.skills || [];
+    const recomendacionesRaw = profile.receivedRecommendations || profile.recommendations || [];
+
     const profileSummary = `
 Nombre: ${fullName}
-Titular: ${profile.headline || "No disponible"}
+Titular: ${(profile.headline || "No disponible").slice(0, 300)}
 Seguidores: ${profile.followerCount || profile.followersCount || "No disponible"}
 Conexiones: ${profile.connectionsCount || profile.connections || "No disponible"}
-Acerca de: ${profile.about || profile.summary || "No disponible"}
-Experiencia: ${JSON.stringify(profile.experience || profile.positions || [])}
-Educacion: ${JSON.stringify(profile.education || profile.educations || [])}
-Aptitudes: ${JSON.stringify(profile.skills || [])}
-Recomendaciones: ${JSON.stringify(profile.receivedRecommendations || profile.recommendations || [])}
+Acerca de: ${(profile.about || profile.summary || "No disponible").slice(0, 2000)}
+Experiencia: ${JSON.stringify(resumeExperience(experienciaRaw))}
+Educacion: ${JSON.stringify(resumeEducation(educacionRaw))}
+Aptitudes: ${resumeSkills(aptitudesRaw)}
+Recomendaciones: ${JSON.stringify(resumeRecommendations(recomendacionesRaw))}
     `.trim();
 
     const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
@@ -145,7 +186,10 @@ Recomendaciones: ${JSON.stringify(profile.receivedRecommendations || profile.rec
       }),
     });
 
-    if (!claudeRes.ok) throw new Error("Error en Claude API: " + await claudeRes.text());
+    if (!claudeRes.ok) {
+      const errText = await claudeRes.text();
+      throw new Error("Error en Claude API: " + errText);
+    }
 
     const claudeData = await claudeRes.json();
     const diagnosis = claudeData.content?.[0]?.text || "No se pudo generar el diagnostico.";
