@@ -34,9 +34,7 @@ Criterios de puntuación por sección (aplícalos de forma consistente):
 
 Estructura del Diagnóstico — Sigue EXACTAMENTE este orden y formato. No agregues ningún título, encabezado, separador ni texto adicional fuera de este esquema:
 
-Primero escribe directamente el resumen general en segunda persona (exactamente 3 párrafos breves). Sin ningún encabezado antes. Solo los párrafos. REGLA ESTRICTA: el resumen habla del perfil en su conjunto. Está PROHIBIDO mencionar el nombre de cualquier sección (Titular, Acerca de, Experiencia, Educación, Aptitudes, Recomendaciones, Palabras clave). Habla de la narrativa global, la propuesta de valor percibida, la fortaleza principal y la oportunidad más importante, sin entrar en detalles de sección.
-
-Luego para CADA sección escribe EXACTAMENTE esto, una tras otra sin separadores:
+Para CADA sección escribe EXACTAMENTE esto, una tras otra sin separadores:
 [Nombre de sección]: [puntuación]/10
 [Análisis en segunda persona]
 Ejemplo de optimización: "[ejemplo concreto y accionable]"
@@ -176,32 +174,47 @@ Aptitudes: ${resumeSkills(aptitudesRaw)}
 Recomendaciones: ${recomendacionesData.length > 0 ? JSON.stringify(recomendacionesData) : "[]"}
     `.trim();
 
-    const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": CLAUDE_KEY,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 4000,
-        temperature: 0,
-        system: SYSTEM_PROMPT,
-        messages: [{
-          role: "user",
-          content: "Genera el diagnostico completo de este perfil de LinkedIn:\n\n" + profileSummary
-        }],
-      }),
-    });
+    const callClaude = async (system, userContent, maxTokens = 2000) => {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": CLAUDE_KEY,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: maxTokens,
+          temperature: 0,
+          system,
+          messages: [{ role: "user", content: userContent }],
+        }),
+      });
+      if (!res.ok) throw new Error("Error en Claude API: " + await res.text());
+      const data = await res.json();
+      return data.content?.[0]?.text || "";
+    };
 
-    if (!claudeRes.ok) {
-      const errText = await claudeRes.text();
-      throw new Error("Error en Claude API: " + errText);
-    }
+    // Llamada 1: solo el resumen general — prompt mínimo y enfocado
+    const RESUMEN_PROMPT = `Eres un experto en personal branding para LinkedIn. Escribe exactamente 3 párrafos en segunda persona sobre el perfil que te comparto. 
 
-    const claudeData = await claudeRes.json();
-    const diagnosis = claudeData.content?.[0]?.text || "No se pudo generar el diagnostico.";
+Regla absoluta: habla ÚNICAMENTE de la impresión global que genera el perfil: qué transmite como profesional, cuál es su fortaleza más notoria y cuál es la oportunidad de mejora más importante. 
+
+Está completamente prohibido mencionar palabras como: Titular, Acerca de, Experiencia, Educación, Aptitudes, Recomendaciones, Palabras clave, sección, puntuación, score. No hagas análisis de ninguna sección. No uses negritas ni encabezados. Solo los 3 párrafos directamente.`;
+
+    const resumen = await callClaude(RESUMEN_PROMPT, "Perfil de LinkedIn:
+
+" + profileSummary, 600);
+
+    // Llamada 2: análisis por secciones + puntaje + cierre
+    const analisis = await callClaude(SYSTEM_PROMPT, "Genera el análisis por secciones de este perfil de LinkedIn:
+
+" + profileSummary, 3000);
+
+    // Combinar resumen + análisis en un solo string que el parser del frontend ya sabe leer
+    const diagnosis = resumen.trim() + "
+
+" + analisis.trim();
 
     return {
       statusCode: 200,
