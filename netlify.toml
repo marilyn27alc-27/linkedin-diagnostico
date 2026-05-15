@@ -2,8 +2,11 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
-[functions.diagnostico]
+[functions."resultado"]
   timeout = 26
 
-[build]
-  publish = "public"
+[functions."iniciar"]
+  timeout = 26
+
+[functions."diagnostico"]
+  timeout = 26
