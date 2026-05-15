@@ -459,13 +459,15 @@ function parseDiagnosis(text) {
     });
   });
 
-  // Detectar puntaje final
+  // Detectar puntaje final y cierre (solo el primer párrafo tras el puntaje)
   const scoreMatch = bodyText.match(/Puntaje final\s*:\s*(\d+\/\d+\s*puntos?)/i);
   if (scoreMatch) {
     result.puntajeFinal = scoreMatch[1];
     const scoreIdx = bodyText.indexOf(scoreMatch[0]);
     const afterScore = bodyText.substring(scoreIdx + scoreMatch[0].length).trim();
-    result.cierre = afterScore.replace(/^[\n\r]+/, '').trim();
+    // Solo tomar el primer bloque de texto (hasta doble salto de línea)
+    const primerParrafo = afterScore.split(/\n{2,}/)[0].trim();
+    result.cierre = primerParrafo;
   }
 
   return result;
@@ -491,6 +493,10 @@ function mostrarResultado(d) {
 
   const parsed = parseDiagnosis(d.diagnosis || "");
   const card = document.getElementById("diagnosisCard");
+
+  // Ocultar el card mientras se construye el HTML para evitar flash de texto
+  card.style.opacity = "0";
+  card.style.transition = "opacity 0.4s ease";
 
   let html = '';
 
@@ -553,6 +559,13 @@ function mostrarResultado(d) {
   document.getElementById("status").classList.remove("visible");
   document.getElementById("btn").disabled = false;
   document.getElementById("result").scrollIntoView({ behavior: "smooth" });
+
+  // Fade-in del card una vez el HTML está completamente listo
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      card.style.opacity = "1";
+    });
+  });
 }
 
 function descargarPDF() {
