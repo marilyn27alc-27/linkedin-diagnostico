@@ -500,13 +500,11 @@ function mostrarResultado(d) {
 
   let html = '';
 
-  // Intro + resumen general
+  // Intro sin resumen general
   html += `
     <div class="diagnosis-intro-box">
       <div class="intro-greeting">💥 Tu diagnóstico de LinkedIn está listo, ${firstName}</div>
       <div class="intro-sub">Tienes una base sólida para convertir tu perfil en un verdadero imán de oportunidades. Vamos al detalle 👇</div>
-      <span class="section-label">🔍 Resumen general</span>
-      <div class="resumen-text">${renderParagraphs(parsed.resumen)}</div>
     </div>
   `;
 
