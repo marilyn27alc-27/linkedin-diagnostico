@@ -115,32 +115,30 @@ Restricciones absolutas de formato:
   }
 
   function resumeRecommendations(profile, max = 4) {
-    // Buscar en TODOS los campos posibles que Apify puede usar
-    const list =
-      profile.receivedRecommendations ||
-      profile.recommendationsReceived ||
-      profile.recommendations ||
-      profile.recommendationsCount > 0 ? [] : [];
-
-    // Intentar extraer de cualquier campo del perfil que sea array y tenga "recommendation"
     let finalList = [];
-    if (Array.isArray(list) && list.length > 0) {
-      finalList = list;
-    } else {
-      // Buscar en todas las keys del profile por si Apify usa otro nombre
+    const knownFields = [
+      'receivedRecommendations','recommendationsReceived','recommendations',
+      'receivedRecs','recommendationsData',
+    ];
+    for (const field of knownFields) {
+      if (Array.isArray(profile[field]) && profile[field].length > 0) {
+        finalList = profile[field]; break;
+      }
+    }
+    if (finalList.length === 0) {
       for (const key of Object.keys(profile)) {
-        if (key.toLowerCase().includes('recommend') && Array.isArray(profile[key]) && profile[key].length > 0) {
-          finalList = profile[key];
-          break;
+        const lk = key.toLowerCase();
+        if (lk.includes('recommend') && !lk.includes('given') && !lk.includes('count') && !lk.includes('num')) {
+          if (Array.isArray(profile[key]) && profile[key].length > 0) {
+            finalList = profile[key]; break;
+          }
         }
       }
     }
-
     if (finalList.length === 0) return [];
-
     return finalList.slice(0, max).map((r) => ({
-      texto: (r.description || r.text || r.recommendation || r.recommendationText || r.body || JSON.stringify(r)).slice(0, 500),
-    })).filter((r) => r.texto.length > 0 && r.texto !== '{}');
+      texto: (r.description || r.text || r.recommendation || r.recommendationText || r.body || r.content || '').slice(0, 500),
+    })).filter((r) => r.texto.length > 5);
   }
 
   try {
@@ -170,6 +168,7 @@ Restricciones absolutas de formato:
     const items = await itemsRes.json();
     const profile = items[0];
     if (!profile) throw new Error("No se encontraron datos del perfil.");
+
 
     const fullName = profile.firstName && profile.lastName
       ? `${profile.firstName} ${profile.lastName}`
