@@ -202,16 +202,16 @@ Regla absoluta: habla ÚNICAMENTE de la impresión global que genera el perfil: 
 
 Está completamente prohibido mencionar palabras como: Titular, Acerca de, Experiencia, Educación, Aptitudes, Recomendaciones, Palabras clave, sección, puntuación, score. No hagas análisis de ninguna sección. No uses negritas ni encabezados. Solo los 3 párrafos directamente.`;
 
-    const resumen = await callClaude(RESUMEN_PROMPT, "Perfil de LinkedIn:
+    // Ambas llamadas en paralelo para reducir tiempo de espera
+    const [resumen, analisis] = await Promise.all([
+      callClaude(RESUMEN_PROMPT, "Perfil de LinkedIn:
 
-" + profileSummary, 600);
+" + profileSummary, 600),
+      callClaude(SYSTEM_PROMPT, "Genera el análisis por secciones de este perfil de LinkedIn:
 
-    // Llamada 2: análisis por secciones + puntaje + cierre
-    const analisis = await callClaude(SYSTEM_PROMPT, "Genera el análisis por secciones de este perfil de LinkedIn:
+" + profileSummary, 3000),
+    ]);
 
-" + profileSummary, 3000);
-
-    // Combinar resumen + análisis en un solo string que el parser del frontend ya sabe leer
     const diagnosis = resumen.trim() + "
 
 " + analisis.trim();
