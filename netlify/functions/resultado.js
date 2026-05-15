@@ -62,16 +62,20 @@ Restricciones: No usar negritas ni ## ni asteriscos. No mencionar reclutadores. 
     const profile = items[0];
     if (!profile) throw new Error("No se encontraron datos del perfil.");
 
+    const fullName = profile.firstName && profile.lastName
+      ? profile.firstName + " " + profile.lastName
+      : profile.fullName || profile.name || "No disponible";
+
     const profileSummary = `
-Nombre: ${profile.fullName || profile.name || "No disponible"}
+Nombre: ${fullName}
 Titular: ${profile.headline || "No disponible"}
-Seguidores: ${profile.followersCount || profile.followers || "No disponible"}
+Seguidores: ${profile.followerCount || profile.followersCount || "No disponible"}
 Conexiones: ${profile.connectionsCount || profile.connections || "No disponible"}
-Acerca de: ${profile.summary || profile.about || "No disponible"}
-Experiencia: ${JSON.stringify(profile.positions || profile.experience || [])}
-Educacion: ${JSON.stringify(profile.educations || profile.education || [])}
+Acerca de: ${profile.about || profile.summary || "No disponible"}
+Experiencia: ${JSON.stringify(profile.experience || profile.positions || [])}
+Educacion: ${JSON.stringify(profile.education || profile.educations || [])}
 Aptitudes: ${JSON.stringify(profile.skills || [])}
-Recomendaciones: ${JSON.stringify(profile.recommendations || [])}
+Recomendaciones: ${JSON.stringify(profile.receivedRecommendations || profile.recommendations || [])}
     `.trim();
 
     const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
@@ -99,8 +103,8 @@ Recomendaciones: ${JSON.stringify(profile.recommendations || [])}
       headers,
       body: JSON.stringify({
         status: "done",
-        name: profile.fullName || profile.name || "Perfil",
-        followers: profile.followersCount || profile.followers || "-",
+        name: fullName,
+        followers: profile.followerCount || profile.followersCount || "-",
         connections: profile.connectionsCount || profile.connections || "-",
         diagnosis,
       }),
