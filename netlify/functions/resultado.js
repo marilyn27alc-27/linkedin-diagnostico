@@ -114,10 +114,16 @@ Restricciones de Estilo:
   }
 
   // Helper: extrae texto de recomendaciones (máx N)
-  function resumeRecommendations(list, max = 3) {
+  // Apify puede devolver el campo como: receivedRecommendations, recommendations, recommendationsReceived
+  function resumeRecommendations(profile, max = 3) {
+    const list =
+      profile.receivedRecommendations ||
+      profile.recommendationsReceived ||
+      profile.recommendations ||
+      [];
     if (!Array.isArray(list) || list.length === 0) return "Empty";
     return list.slice(0, max).map((r) => ({
-      texto: (r.description || r.text || r.recommendation || "").slice(0, 400),
+      texto: (r.description || r.text || r.recommendation || r.recommendationText || JSON.stringify(r)).slice(0, 400),
     }));
   }
 
@@ -168,7 +174,7 @@ Acerca de: ${(profile.about || profile.summary || "No disponible").slice(0, 2000
 Experiencia: ${JSON.stringify(resumeExperience(experienciaRaw))}
 Educacion: ${JSON.stringify(resumeEducation(educacionRaw))}
 Aptitudes: ${resumeSkills(aptitudesRaw)}
-Recomendaciones: ${JSON.stringify(resumeRecommendations(recomendacionesRaw))}
+Recomendaciones: ${JSON.stringify(resumeRecommendations(profile))}
     `.trim();
 
     const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
