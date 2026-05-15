@@ -39,10 +39,10 @@ Para CADA sección escribe EXACTAMENTE esto, una tras otra sin separadores:
 [Análisis en segunda persona]
 Ejemplo de optimización: "[ejemplo concreto y accionable]"
 
-Luego escribe en su propia línea:
+Una vez escritas las 7 secciones (Titular, Acerca de, Experiencia, Educación, Aptitudes, Recomendaciones, Palabras clave), escribe en una línea nueva:
 Puntaje final: XX/70 puntos
 
-Luego en la línea siguiente el párrafo de cierre en segunda persona, máximo 250 caracteres. Solo una vez. No lo repitas.
+Inmediatamente después, en la siguiente línea, escribe el párrafo de cierre en segunda persona (máximo 250 caracteres). Una sola vez. No lo repitas dentro de ninguna sección.
 
 Secciones a evaluar en este orden: Titular, Acerca de, Experiencia, Educación, Aptitudes, Recomendaciones, Palabras clave
 
@@ -79,6 +79,7 @@ RECOMENDACIONES:
 
 PALABRAS CLAVE:
 - Evalúa si el perfil aprovecha palabras clave estratégicas para visibilidad en búsquedas de LinkedIn
+- IMPORTANTE: después del análisis de Palabras clave escribe ÚNICAMENTE el ejemplo de optimización. NO escribas "Puntaje final" aquí. El puntaje final va en una línea separada DESPUÉS de todas las secciones.
 
 Restricciones absolutas de formato:
 - Cero negritas, cero ##, cero asteriscos como viñetas, cero guiones como separadores (---)
@@ -114,15 +115,32 @@ Restricciones absolutas de formato:
   }
 
   function resumeRecommendations(profile, max = 4) {
+    // Buscar en TODOS los campos posibles que Apify puede usar
     const list =
       profile.receivedRecommendations ||
       profile.recommendationsReceived ||
       profile.recommendations ||
-      [];
-    if (!Array.isArray(list) || list.length === 0) return [];
-    return list.slice(0, max).map((r) => ({
-      texto: (r.description || r.text || r.recommendation || r.recommendationText || "").slice(0, 500),
-    })).filter((r) => r.texto.length > 0);
+      profile.recommendationsCount > 0 ? [] : [];
+
+    // Intentar extraer de cualquier campo del perfil que sea array y tenga "recommendation"
+    let finalList = [];
+    if (Array.isArray(list) && list.length > 0) {
+      finalList = list;
+    } else {
+      // Buscar en todas las keys del profile por si Apify usa otro nombre
+      for (const key of Object.keys(profile)) {
+        if (key.toLowerCase().includes('recommend') && Array.isArray(profile[key]) && profile[key].length > 0) {
+          finalList = profile[key];
+          break;
+        }
+      }
+    }
+
+    if (finalList.length === 0) return [];
+
+    return finalList.slice(0, max).map((r) => ({
+      texto: (r.description || r.text || r.recommendation || r.recommendationText || r.body || JSON.stringify(r)).slice(0, 500),
+    })).filter((r) => r.texto.length > 0 && r.texto !== '{}');
   }
 
   try {
