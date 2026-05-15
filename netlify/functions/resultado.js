@@ -16,12 +16,8 @@ exports.handler = async function (event) {
 
 Si la URL corresponde a una página de empresa (contiene "/company/" o "/showcase/"), responde únicamente: Lo siento, no puedo generar diagnósticos para páginas de empresa en LinkedIn. Solo puedo ayudarte a optimizar perfiles personales.
 
-Regla sobre recomendaciones: Si el campo Recomendaciones es "[]" o está vacío, escribe exactamente:
-Recomendaciones: 0/10
-Actualmente no se observan recomendaciones en tu perfil. Incluir una o dos recomendaciones orientadas a resultados reforzaría tu credibilidad y prueba social.
-
 Metodología de Evaluación:
-Cada sección se puntúa del 1 al 10 según criterios fijos. Aplica siempre los mismos criterios para el mismo contenido. La puntuación final es la suma de las 7 secciones sobre 70 puntos.
+Cada sección se puntúa del 1 al 10 según criterios fijos. Aplica siempre los mismos criterios para el mismo contenido. La puntuación final es la suma de las 6 secciones sobre 60 puntos.
 
 Criterios de puntuación por sección (aplícalos de forma consistente):
 - Titular: claridad del valor, a quién va dirigido, diferencial comunicado
@@ -29,7 +25,6 @@ Criterios de puntuación por sección (aplícalos de forma consistente):
 - Experiencia: claridad de roles, logros cuantificables, progresión visible
 - Educación: relevancia para el posicionamiento actual, nivel de detalle
 - Aptitudes: alineación estratégica con el posicionamiento, jerarquía
-- Recomendaciones: calidad del contenido, alineación con el posicionamiento
 - Palabras clave: presencia estratégica de términos de búsqueda relevantes
 
 Estructura del Diagnóstico — Sigue EXACTAMENTE este orden y formato. No agregues ningún título, encabezado, separador ni texto adicional fuera de este esquema:
@@ -39,12 +34,12 @@ Para CADA sección escribe EXACTAMENTE esto, una tras otra sin separadores:
 [Análisis en segunda persona]
 Ejemplo de optimización: "[ejemplo concreto y accionable]"
 
-Una vez escritas las 7 secciones (Titular, Acerca de, Experiencia, Educación, Aptitudes, Recomendaciones, Palabras clave), escribe en una línea nueva:
-Puntaje final: XX/70 puntos
+Una vez escritas las 6 secciones (Titular, Acerca de, Experiencia, Educación, Aptitudes, Palabras clave), escribe en una línea nueva:
+Puntaje final: XX/60 puntos
 
 Inmediatamente después, en la siguiente línea, escribe el párrafo de cierre en segunda persona (máximo 250 caracteres). Una sola vez. No lo repitas dentro de ninguna sección.
 
-Secciones a evaluar en este orden: Titular, Acerca de, Experiencia, Educación, Aptitudes, Recomendaciones, Palabras clave
+Secciones a evaluar en este orden: Titular, Acerca de, Experiencia, Educación, Aptitudes, Palabras clave
 
 Instrucciones por sección:
 
@@ -71,11 +66,6 @@ EDUCACIÓN:
 APTITUDES:
 - Evalúa relevancia estratégica del conjunto según el posicionamiento del perfil
 - No menciones aptitudes específicas por su nombre ni cuántas hay en total
-
-RECOMENDACIONES:
-- Evalúa la calidad del contenido en relación al posicionamiento profesional
-- No menciones quién emitió la recomendación ni cuántas hay
-- Si ya hay recomendaciones, no sugieras agregar más
 
 PALABRAS CLAVE:
 - Evalúa si el perfil aprovecha palabras clave estratégicas para visibilidad en búsquedas de LinkedIn
