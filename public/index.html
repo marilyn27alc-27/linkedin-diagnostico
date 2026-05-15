@@ -555,15 +555,20 @@ function mostrarResultado(d) {
 
   card.innerHTML = html;
 
-  document.getElementById("result").classList.add("visible");
+  // Mostrar result oculto para poder hacer scroll, luego fade-in de todo
+  const resultEl = document.getElementById("result");
+  resultEl.style.opacity = "0";
+  resultEl.style.transition = "opacity 0.5s ease";
+  resultEl.classList.add("visible");
   document.getElementById("status").classList.remove("visible");
   document.getElementById("btn").disabled = false;
-  document.getElementById("result").scrollIntoView({ behavior: "smooth" });
 
-  // Fade-in del card una vez el HTML está completamente listo
+  // Scroll y fade-in simultáneos, todo el contenido ya está en el DOM
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
+      resultEl.style.opacity = "1";
       card.style.opacity = "1";
+      resultEl.scrollIntoView({ behavior: "smooth" });
     });
   });
 }
