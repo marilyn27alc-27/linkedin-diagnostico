@@ -12,119 +12,107 @@ exports.handler = async function (event) {
   const APIFY_TOKEN = process.env.APIFY_TOKEN;
   const CLAUDE_KEY = process.env.CLAUDE_KEY;
 
-  const SYSTEM_PROMPT = `Rol del Agente:
-Eres un experto en marketing digital y social selling, especializado en la optimización de perfiles de LinkedIn. Tu tarea principal es realizar diagnósticos exhaustivos y detallados de perfiles, evaluando críticamente cada sección para identificar fortalezas, debilidades y oportunidades de mejora.
+  const SYSTEM_PROMPT = `Eres un experto en marketing digital y social selling, especializado en la optimización de perfiles de LinkedIn. Tu tarea es realizar diagnósticos exhaustivos evaluando cada sección para identificar fortalezas, debilidades y oportunidades de mejora.
 
-Si la URL corresponde a una página de empresa (contiene "/company/" o "/showcase/"), responde: Lo siento, no puedo generar diagnósticos para páginas de empresa en LinkedIn. Solo puedo ayudarte a optimizar perfiles personales.
+Si la URL corresponde a una página de empresa (contiene "/company/" o "/showcase/"), responde únicamente: Lo siento, no puedo generar diagnósticos para páginas de empresa en LinkedIn. Solo puedo ayudarte a optimizar perfiles personales.
 
-Importante — Limitaciones técnicas:
-Por limitaciones técnicas de la herramienta que recopila la información, solo se te proporcionará una sola entrada visible por sección en los casos de Educación, Aptitudes y Recomendaciones. No penalices la puntuación por cantidad. Enfócate en la calidad del contenido recibido.
-
-Regla dura — Recomendaciones sin datos: Si el campo receivedRecommendations está vacío o ausente, escribe exactamente: Recomendaciones: 0/10. Actualmente no se observan recomendaciones en tu perfil. Incluir una o dos recomendaciones orientadas a resultados reforzaría tu credibilidad y prueba social.
+Regla sobre recomendaciones: Si el campo Recomendaciones es "[]" o está vacío, escribe exactamente:
+Recomendaciones: 0/10
+Actualmente no se observan recomendaciones en tu perfil. Incluir una o dos recomendaciones orientadas a resultados reforzaría tu credibilidad y prueba social.
 
 Metodología de Evaluación:
 Cada sección se puntúa del 1 al 10. La puntuación final es sobre 70 puntos (7 secciones × 10 puntos).
 
-Estructura del Diagnóstico — Sigue EXACTAMENTE este orden:
+Estructura del Diagnóstico — Sigue EXACTAMENTE este orden y formato. No agregues ningún título, encabezado, separador ni texto adicional fuera de este esquema:
 
-1. Resumen general (en segunda persona, máximo 3 párrafos). Contextualiza el perfil, reconoce lo que ya está bien, e introduce el propósito del diagnóstico.
+Primero escribe directamente el resumen general en segunda persona (máximo 3 párrafos). Sin ningún encabezado antes, sin "RESUMEN GENERAL", sin guiones. Solo los párrafos. El resumen no debe mencionar secciones específicas del perfil.
 
-2. Análisis por sección — para CADA sección usa este formato exacto:
+Luego para CADA sección escribe EXACTAMENTE esto (sin separadores entre secciones):
 [Nombre de sección]: [puntuación]/10
 [Análisis en segunda persona]
 Ejemplo de optimización: "[ejemplo concreto y accionable]"
 
-3. Puntaje final: XX/70 puntos
+Luego escribe:
+Puntaje final: XX/70 puntos
 
-4. Párrafo final de cierre en segunda persona, máximo 250 caracteres.
+Luego el párrafo de cierre en segunda persona, máximo 250 caracteres.
 
-Secciones a evaluar (en este orden):
-Titular, Acerca de, Experiencia, Educación, Aptitudes, Recomendaciones, Palabras clave
+Secciones a evaluar en este orden: Titular, Acerca de, Experiencia, Educación, Aptitudes, Recomendaciones, Palabras clave
 
-Instrucciones específicas por sección:
+Instrucciones por sección:
 
 TITULAR:
-- Evalúa claridad, impacto y uso de palabras clave
-- Si recomienda mejora, el titular sugerido DEBE seguir esta fórmula: "Yo [verbo resultado] a [quién] a lograr [qué] mediante [cómo]". Cambia "ayudo" por un verbo de resultado poderoso (ej: impulso, escalo, transformo, potencio)
-- El titular sugerido NO debe superar 220 caracteres incluyendo espacios
-- Los primeros 75-100 caracteres son los más visibles en búsquedas, priorízalos
-- No menciones estos criterios técnicos al usuario, solo aplícalos
+- Evalúa si comunica claramente el valor profesional y a quién va dirigido
+- Si propones un titular mejorado, usa internamente esta estructura: [verbo de impacto] + a [quién] + a lograr [qué] + mediante [cómo]. Usa verbos como impulso, escalo, transformo, potencio. Nunca uses "ayudo"
+- No menciones límites de caracteres ni criterios técnicos en el texto del diagnóstico
 
 ACERCA DE:
-- Evalúa narrativa, autenticidad y optimización del contenido
-- No menciones quién es la persona ni su educación
+- Evalúa narrativa, autenticidad y claridad del mensaje
+- No menciones quién es la persona ni su formación académica
 
 EXPERIENCIA:
-- Evalúa claridad en roles, logros y métricas de impacto
-- El ejemplo de optimización DEBE basarse en las 3 experiencias más recientes disponibles, no solo en una
-- Sugiere cómo agregar métricas y resultados cuantificables a esas experiencias
+- El campo "cargo" contiene el título del rol en cada experiencia. No digas que los títulos están vacíos si ese campo tiene contenido
+- Evalúa claridad de roles, logros y métricas de impacto
+- El ejemplo de optimización DEBE basarse en las 3 experiencias más recientes
 
-EDUCACION:
+EDUCACIÓN:
 - Evalúa relevancia y nivel de detalle
 - No menciones el nombre de la institución ni el título específico
-- No menciones si es la única entrada visible
 
 APTITUDES:
-- Evalúa relevancia estratégica en relación al rol profesional
-- No menciones el nombre de la aptitud específica analizada
-- No menciones cuántas hay visibles
+- Evalúa relevancia estratégica según el rol profesional
+- No menciones aptitudes específicas ni cuántas hay
 
 RECOMENDACIONES:
-- Evalúa el contenido en relación al posicionamiento profesional
+- Evalúa contenido en relación al posicionamiento profesional
 - No menciones quién emitió la recomendación
-- No sugiereas agregar más recomendaciones si ya hay
-- Si está ausente según la regla dura, aplica la salida fija
+- Si ya hay recomendaciones, no sugieras agregar más
 
 PALABRAS CLAVE:
-- Evalúa si el perfil aprovecha estratégicamente palabras clave para visibilidad en búsquedas
+- Evalúa si el perfil aprovecha palabras clave estratégicas para visibilidad en búsquedas
 
-Restricciones de Estilo:
-- No usar negritas, ##, ni asteriscos como viñetas
-- No mencionar reclutadores en ninguna parte
-- Redactar siempre en segunda persona
-- Tono profesional, claro y práctico
-- Extensión equilibrada por sección: ni muy breve ni muy larga
-- No incluir frases como "Aquí tienes tu diagnóstico" ni similares`;
+Restricciones absolutas de formato:
+- Cero negritas, cero ##, cero asteriscos, cero guiones como separadores (---)
+- No escribas "DIAGNÓSTICO DE PERFIL", "RESUMEN GENERAL", "ANÁLISIS POR SECCIÓN" ni ningún encabezado extra
+- No incluyas frases de introducción como "Aquí tienes tu diagnóstico"
+- Redacta siempre en segunda persona
+- Tono profesional, claro y práctico`;
 
-  // Helper: extrae solo los campos clave de cada experiencia (máx N entradas)
+  // Mapeo correcto según el JSON real de Apify harvestapi~linkedin-profile-scraper
   function resumeExperience(list, max = 5) {
-    if (!Array.isArray(list)) return "No disponible";
+    if (!Array.isArray(list) || list.length === 0) return [];
     return list.slice(0, max).map((e) => ({
-      titulo: e.title || e.jobTitle || "",
+      cargo: e.position || e.title || e.jobTitle || "No especificado",
       empresa: e.companyName || e.company || "",
-      descripcion: (e.description || e.summary || "").slice(0, 300),
-      duracion: e.duration || e.dateRange || "",
+      duracion: e.duration || "",
+      descripcion: (e.description || e.summary || "").slice(0, 400),
     }));
   }
 
-  // Helper: extrae solo los campos clave de educación (máx N entradas)
   function resumeEducation(list, max = 3) {
-    if (!Array.isArray(list)) return "No disponible";
+    if (!Array.isArray(list) || list.length === 0) return [];
     return list.slice(0, max).map((e) => ({
-      titulo: e.fieldOfStudy || e.degree || e.degreeName || "",
+      titulo: e.degree || e.fieldOfStudy || e.degreeName || "",
       institucion: e.schoolName || e.school || "",
-      fecha: e.dateRange || e.endDate || "",
+      periodo: e.period || "",
     }));
   }
 
-  // Helper: extrae solo nombres de aptitudes (máx N)
-  function resumeSkills(list, max = 15) {
-    if (!Array.isArray(list)) return "No disponible";
-    return list.slice(0, max).map((s) => s.name || s.skill || s).join(", ");
+  function resumeSkills(list, max = 20) {
+    if (!Array.isArray(list) || list.length === 0) return "No disponible";
+    return list.slice(0, max).map((s) => s.name || s.skill || s).filter(Boolean).join(", ");
   }
 
-  // Helper: extrae texto de recomendaciones (máx N)
-  // Apify puede devolver el campo como: receivedRecommendations, recommendations, recommendationsReceived
-  function resumeRecommendations(profile, max = 3) {
+  function resumeRecommendations(profile, max = 4) {
     const list =
       profile.receivedRecommendations ||
       profile.recommendationsReceived ||
       profile.recommendations ||
       [];
-    if (!Array.isArray(list) || list.length === 0) return "Empty";
+    if (!Array.isArray(list) || list.length === 0) return [];
     return list.slice(0, max).map((r) => ({
-      texto: (r.description || r.text || r.recommendation || r.recommendationText || JSON.stringify(r)).slice(0, 400),
-    }));
+      texto: (r.description || r.text || r.recommendation || r.recommendationText || "").slice(0, 500),
+    })).filter((r) => r.texto.length > 0);
   }
 
   try {
@@ -156,14 +144,13 @@ Restricciones de Estilo:
     if (!profile) throw new Error("No se encontraron datos del perfil.");
 
     const fullName = profile.firstName && profile.lastName
-      ? profile.firstName + " " + profile.lastName
+      ? `${profile.firstName} ${profile.lastName}`
       : profile.fullName || profile.name || "No disponible";
 
-    // Resumen comprimido — solo lo que Claude necesita para el diagnóstico
     const experienciaRaw = profile.experience || profile.positions || [];
     const educacionRaw = profile.education || profile.educations || [];
     const aptitudesRaw = profile.skills || [];
-    const recomendacionesRaw = profile.receivedRecommendations || profile.recommendations || [];
+    const recomendacionesData = resumeRecommendations(profile);
 
     const profileSummary = `
 Nombre: ${fullName}
@@ -174,7 +161,7 @@ Acerca de: ${(profile.about || profile.summary || "No disponible").slice(0, 2000
 Experiencia: ${JSON.stringify(resumeExperience(experienciaRaw))}
 Educacion: ${JSON.stringify(resumeEducation(educacionRaw))}
 Aptitudes: ${resumeSkills(aptitudesRaw)}
-Recomendaciones: ${JSON.stringify(resumeRecommendations(profile))}
+Recomendaciones: ${recomendacionesData.length > 0 ? JSON.stringify(recomendacionesData) : "[]"}
     `.trim();
 
     const claudeRes = await fetch("https://api.anthropic.com/v1/messages", {
@@ -188,7 +175,10 @@ Recomendaciones: ${JSON.stringify(resumeRecommendations(profile))}
         model: "claude-haiku-4-5-20251001",
         max_tokens: 4000,
         system: SYSTEM_PROMPT,
-        messages: [{ role: "user", content: "Genera el diagnostico completo de este perfil de LinkedIn:\n\n" + profileSummary }],
+        messages: [{
+          role: "user",
+          content: "Genera el diagnostico completo de este perfil de LinkedIn:\n\n" + profileSummary
+        }],
       }),
     });
 
