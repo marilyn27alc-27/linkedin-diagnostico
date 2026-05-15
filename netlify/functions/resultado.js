@@ -195,9 +195,7 @@ Recomendaciones: ${recomendacionesData.length > 0 ? JSON.stringify(recomendacion
       return data.content?.[0]?.text || "";
     };
 
-    const diagnosis = await callClaude(SYSTEM_PROMPT, "Genera el análisis por secciones de este perfil de LinkedIn:
-
-" + profileSummary, 3000);
+    const diagnosis = await callClaude(SYSTEM_PROMPT, "Genera el análisis por secciones de este perfil de LinkedIn:\n\n" + profileSummary, 3000);
 
     return {
       statusCode: 200,
