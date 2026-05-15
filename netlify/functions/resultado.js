@@ -195,26 +195,9 @@ Recomendaciones: ${recomendacionesData.length > 0 ? JSON.stringify(recomendacion
       return data.content?.[0]?.text || "";
     };
 
-    // Llamada 1: solo el resumen general — prompt mínimo y enfocado
-    const RESUMEN_PROMPT = `Eres un experto en personal branding para LinkedIn. Escribe exactamente 3 párrafos en segunda persona sobre el perfil que te comparto. 
+    const diagnosis = await callClaude(SYSTEM_PROMPT, "Genera el análisis por secciones de este perfil de LinkedIn:
 
-Regla absoluta: habla ÚNICAMENTE de la impresión global que genera el perfil: qué transmite como profesional, cuál es su fortaleza más notoria y cuál es la oportunidad de mejora más importante. 
-
-Está completamente prohibido mencionar palabras como: Titular, Acerca de, Experiencia, Educación, Aptitudes, Recomendaciones, Palabras clave, sección, puntuación, score. No hagas análisis de ninguna sección. No uses negritas ni encabezados. Solo los 3 párrafos directamente.`;
-
-    // Ambas llamadas en paralelo para reducir tiempo de espera
-    const [resumen, analisis] = await Promise.all([
-      callClaude(RESUMEN_PROMPT, "Perfil de LinkedIn:
-
-" + profileSummary, 600),
-      callClaude(SYSTEM_PROMPT, "Genera el análisis por secciones de este perfil de LinkedIn:
-
-" + profileSummary, 3000),
-    ]);
-
-    const diagnosis = resumen.trim() + "
-
-" + analisis.trim();
+" + profileSummary, 3000);
 
     return {
       statusCode: 200,
