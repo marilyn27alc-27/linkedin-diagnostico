@@ -59,9 +59,157 @@
     .result-meta { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 3px; }
     .result-profile-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #31F482; text-decoration: none; border: 1px solid rgba(49,244,130,0.3); border-radius: 20px; padding: 4px 12px; margin-top: 8px; transition: background 0.2s; }
     .result-profile-link:hover { background: rgba(49,244,130,0.1); }
+
+    /* === DIAGNOSIS CARDS === */
     .diagnosis-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(193,147,242,0.15); border-radius: 20px; padding: 2rem; margin-bottom: 1.5rem; }
-    .diagnosis-intro { background: linear-gradient(135deg, rgba(63,29,240,0.2), rgba(193,147,242,0.1)); border: 1px solid rgba(193,147,242,0.25); border-radius: 14px; padding: 1.5rem; margin-bottom: 1.5rem; font-size: 15px; line-height: 1.75; color: rgba(255,255,255,0.9); white-space: pre-wrap; }
-    .diagnosis-text { font-size: 14px; line-height: 1.9; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
+
+    /* Intro box (saludo + resumen general) */
+    .diagnosis-intro-box {
+      background: linear-gradient(135deg, rgba(63,29,240,0.2), rgba(193,147,242,0.1));
+      border: 1px solid rgba(193,147,242,0.25);
+      border-radius: 14px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 2rem;
+    }
+    .diagnosis-intro-box .intro-greeting {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+    .diagnosis-intro-box .intro-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 1.25rem;
+    }
+    .diagnosis-intro-box .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #31F482;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .diagnosis-intro-box .resumen-text {
+      font-size: 14px;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.88);
+    }
+    .resumen-text p { margin-bottom: 0.85rem; }
+    .resumen-text p:last-child { margin-bottom: 0; }
+
+    /* Separador de secciones */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 2rem 0 1.5rem;
+    }
+    .section-divider-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #C193F2;
+      white-space: nowrap;
+    }
+    .section-divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(193,147,242,0.4), transparent);
+    }
+
+    /* Cada bloque de sección */
+    .section-block {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(193,147,242,0.12);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .section-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      gap: 12px;
+    }
+    .section-block-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #C193F2;
+    }
+    .section-score {
+      font-size: 13px;
+      font-weight: 700;
+      color: #31F482;
+      background: rgba(49,244,130,0.1);
+      border: 1px solid rgba(49,244,130,0.25);
+      border-radius: 20px;
+      padding: 2px 12px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .section-block-body {
+      font-size: 14px;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.82);
+    }
+    .section-block-body p { margin-bottom: 0.7rem; }
+    .section-block-body p:last-child { margin-bottom: 0; }
+    .section-block-example {
+      margin-top: 1rem;
+      padding: 0.9rem 1.1rem;
+      background: rgba(127,88,241,0.12);
+      border-left: 3px solid #7F58F1;
+      border-radius: 0 8px 8px 0;
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.7;
+    }
+    .section-block-example strong {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #C193F2;
+      margin-bottom: 4px;
+    }
+
+    /* Puntaje final */
+    .score-final-box {
+      text-align: center;
+      margin: 2rem 0 0.5rem;
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(49,244,130,0.08), rgba(127,88,241,0.08));
+      border: 1px solid rgba(49,244,130,0.2);
+      border-radius: 14px;
+    }
+    .score-final-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 6px;
+    }
+    .score-final-number {
+      font-size: 36px;
+      font-weight: 800;
+      color: #31F482;
+    }
+
+    /* Cierre */
+    .cierre-box {
+      margin-top: 1.25rem;
+      font-size: 14px;
+      line-height: 1.75;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      font-style: italic;
+    }
+
     .cta-card { background: linear-gradient(135deg, rgba(28,18,57,0.95), rgba(42,26,94,0.9)); border: 1px solid rgba(193,147,242,0.3); border-radius: 20px; padding: 2.5rem; margin-bottom: 1.5rem; text-align: center; }
     .cta-title { font-size: 22px; font-weight: 700; margin-bottom: 1rem; }
     .cta-list { list-style: none; text-align: left; max-width: 520px; margin: 0 auto 2rem; }
@@ -129,10 +277,11 @@
         </div>
       </div>
     </div>
-    <div class="diagnosis-card">
-      <div class="diagnosis-intro" id="diagnosisIntro"></div>
-      <div class="diagnosis-text" id="diagnosisBody"></div>
+
+    <div class="diagnosis-card" id="diagnosisCard">
+      <!-- Se rellena dinámicamente -->
     </div>
+
     <div class="cta-card">
       <div class="cta-title">✅ ¿Y ahora qué?<br><span style="color:#C193F2;font-size:16px;">Aquí es donde entramos nosotros.</span></div>
       <p style="font-size:14px;color:rgba(255,255,255,0.7);margin-bottom:1.5rem;">En AI Conversion Solutions:</p>
@@ -245,25 +394,157 @@ async function analizar() {
   }
 }
 
+/* ─── PARSER DEL DIAGNÓSTICO ─── */
+
+// Secciones que Claude evalúa (en orden)
+const SECCIONES = ["Titular", "Acerca de", "Experiencia", "Educación", "Educacion", "Aptitudes", "Recomendaciones", "Palabras clave"];
+
+function parseDiagnosis(text) {
+  // Limpia markdown residual
+  text = text.replace(/\*\*/g, '').replace(/^#{1,3}\s*/gm, '').replace(/^\*\s+/gm, '');
+
+  const result = {
+    resumen: '',
+    secciones: [],
+    puntajeFinal: '',
+    cierre: ''
+  };
+
+  // Detectar dónde empieza la primera sección evaluada
+  const seccionesRegex = SECCIONES.map(s => s).join('|');
+  const firstSectionMatch = text.match(new RegExp(`(${seccionesRegex})\\s*:\\s*\\d+\\/10`, 'i'));
+  const firstSectionIdx = firstSectionMatch ? text.indexOf(firstSectionMatch[0]) : -1;
+
+  if (firstSectionIdx > 0) {
+    result.resumen = text.substring(0, firstSectionIdx).trim();
+  }
+
+  const bodyText = firstSectionIdx > 0 ? text.substring(firstSectionIdx) : text;
+
+  // Partir por cada sección
+  const sectionPattern = new RegExp(
+    `(${seccionesRegex})\\s*:\\s*(\\d+)\\/10`,
+    'gi'
+  );
+
+  let matches = [];
+  let m;
+  while ((m = sectionPattern.exec(bodyText)) !== null) {
+    matches.push({ name: m[1], score: m[2], index: m.index });
+  }
+
+  matches.forEach((match, i) => {
+    const start = match.index + bodyText.slice(match.index).indexOf('\n') + 1;
+    const end = i + 1 < matches.length ? matches[i + 1].index : bodyText.length;
+    let content = bodyText.substring(start, end).trim();
+
+    // Separar "Ejemplo de optimización" si existe
+    let body = content;
+    let example = '';
+    const exampleMatch = content.match(/Ejemplo de optimizaci[oó]n\s*:\s*"?([\s\S]*?)(?:"?\s*$|(?=\n\n))/i);
+    if (exampleMatch) {
+      example = exampleMatch[1].trim().replace(/^"|"$/g, '');
+      body = content.substring(0, exampleMatch.index).trim();
+    }
+
+    result.secciones.push({
+      name: match.name,
+      score: match.score,
+      body,
+      example,
+    });
+  });
+
+  // Detectar puntaje final
+  const scoreMatch = bodyText.match(/Puntaje final\s*:\s*(\d+\/\d+\s*puntos?)/i);
+  if (scoreMatch) {
+    result.puntajeFinal = scoreMatch[1];
+    const scoreIdx = bodyText.indexOf(scoreMatch[0]);
+    const afterScore = bodyText.substring(scoreIdx + scoreMatch[0].length).trim();
+    result.cierre = afterScore.replace(/^[\n\r]+/, '').trim();
+  }
+
+  return result;
+}
+
+function renderParagraphs(text) {
+  return text.split(/\n{2,}/)
+    .map(p => p.trim())
+    .filter(Boolean)
+    .map(p => `<p>${p.replace(/\n/g, ' ')}</p>`)
+    .join('');
+}
+
 function mostrarResultado(d) {
   const name = d.name || "Perfil";
   const initials = name.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase();
+  const firstName = name.split(" ")[0];
+
   document.getElementById("initials").textContent = initials;
   document.getElementById("resultName").textContent = name;
   document.getElementById("resultMeta").textContent = d.followers + " seguidores · " + d.connections + " conexiones";
   document.getElementById("profileLink").href = currentUrl;
-  const firstName = name.split(" ")[0];
-  const intro = "💥 Tu perfil está a punto de despegar\n\nHola " + firstName + ",\n\n¡Tu diagnóstico personalizado de LinkedIn ya está listo!\n\nY las noticias son buenas: tienes una base sólida para convertir tu perfil en un verdadero imán de oportunidades. Vamos al detalle 👇\n\n🔍 Resumen general";
-  const fullText = d.diagnosis || "";
-  const splitIdx = fullText.indexOf("Titular:");
-  let resumen = "";
-  let body = fullText;
-  if (splitIdx > -1) {
-    resumen = fullText.substring(0, splitIdx).trim();
-    body = fullText.substring(splitIdx).trim();
+
+  const parsed = parseDiagnosis(d.diagnosis || "");
+  const card = document.getElementById("diagnosisCard");
+
+  let html = '';
+
+  // Intro + resumen general
+  html += `
+    <div class="diagnosis-intro-box">
+      <div class="intro-greeting">💥 Tu diagnóstico de LinkedIn está listo, ${firstName}</div>
+      <div class="intro-sub">Tienes una base sólida para convertir tu perfil en un verdadero imán de oportunidades. Vamos al detalle 👇</div>
+      <span class="section-label">🔍 Resumen general</span>
+      <div class="resumen-text">${renderParagraphs(parsed.resumen)}</div>
+    </div>
+  `;
+
+  // Divisor de análisis por secciones
+  if (parsed.secciones.length > 0) {
+    html += `
+      <div class="section-divider">
+        <span class="section-divider-label">Análisis por secciones</span>
+        <span class="section-divider-line"></span>
+      </div>
+    `;
+
+    parsed.secciones.forEach(sec => {
+      html += `
+        <div class="section-block">
+          <div class="section-block-header">
+            <span class="section-block-name">${sec.name}</span>
+            <span class="section-score">${sec.score}/10</span>
+          </div>
+          <div class="section-block-body">${renderParagraphs(sec.body)}</div>
+          ${sec.example ? `
+            <div class="section-block-example">
+              <strong>Ejemplo de optimización</strong>
+              ${sec.example}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    });
   }
-  document.getElementById("diagnosisIntro").textContent = intro + "\n\n" + resumen;
-  document.getElementById("diagnosisBody").textContent = body;
+
+  // Puntaje final
+  if (parsed.puntajeFinal) {
+    html += `
+      <div class="score-final-box">
+        <div class="score-final-label">Puntaje final</div>
+        <div class="score-final-number">${parsed.puntajeFinal}</div>
+      </div>
+    `;
+  }
+
+  // Cierre
+  if (parsed.cierre) {
+    html += `<div class="cierre-box">${parsed.cierre}</div>`;
+  }
+
+  card.innerHTML = html;
+
   document.getElementById("result").classList.add("visible");
   document.getElementById("status").classList.remove("visible");
   document.getElementById("btn").disabled = false;
@@ -272,11 +553,10 @@ function mostrarResultado(d) {
 
 function descargarPDF() {
   const name = document.getElementById("resultName").textContent;
-  const intro = document.getElementById("diagnosisIntro").textContent;
-  const body = document.getElementById("diagnosisBody").textContent;
-  const full = intro + "\n\n" + body;
+  const card = document.getElementById("diagnosisCard");
+  const plainText = card.innerText;
   const w = window.open('', '_blank');
-  w.document.write('<html><head><title>Diagnostico LinkedIn - ' + name + '</title><style>body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;color:#1C1239;line-height:1.7;}h1{color:#3D1DF0;font-size:24px;margin-bottom:8px;}p{font-size:14px;color:#555;margin-bottom:24px;}pre{font-family:Arial,sans-serif;font-size:14px;white-space:pre-wrap;line-height:1.8;}.footer{margin-top:40px;padding-top:20px;border-top:1px solid #eee;font-size:12px;color:#999;}</style></head><body><h1>Diagnostico de LinkedIn - ' + name + '</h1><p>Generado por AI Conversion Solutions - aiconversionsolutions.com</p><pre>' + full + '</pre><div class="footer">AI Conversion Solutions - aiconversionsolutions.com</div></body></html>');
+  w.document.write('<html><head><title>Diagnostico LinkedIn - ' + name + '</title><style>body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;color:#1C1239;line-height:1.7;}h1{color:#3D1DF0;font-size:24px;margin-bottom:8px;}p{font-size:14px;color:#555;margin-bottom:24px;}pre{font-family:Arial,sans-serif;font-size:14px;white-space:pre-wrap;line-height:1.8;}.footer{margin-top:40px;padding-top:20px;border-top:1px solid #eee;font-size:12px;color:#999;}</style></head><body><h1>Diagnostico de LinkedIn - ' + name + '</h1><p>Generado por AI Conversion Solutions - aiconversionsolutions.com</p><pre>' + plainText + '</pre><div class="footer">AI Conversion Solutions - aiconversionsolutions.com</div></body></html>');
   w.document.close();
   setTimeout(() => w.print(), 500);
 }
