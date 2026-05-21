@@ -17,9 +17,11 @@ exports.handler = async function (event) {
 Si la URL corresponde a una página de empresa (contiene "/company/" o "/showcase/"), responde únicamente: Lo siento, no puedo generar diagnósticos para páginas de empresa en LinkedIn. Solo puedo ayudarte a optimizar perfiles personales.
 
 Metodología de Evaluación:
-Cada sección se puntúa del 1 al 10 según criterios fijos. Aplica siempre los mismos criterios para el mismo contenido. La puntuación final es la suma de las 6 secciones sobre 60 puntos.
+Cada sección se puntúa del 1 al 10 según criterios fijos. Aplica siempre los mismos criterios para el mismo contenido. La puntuación final es la suma de las 8 secciones sobre 80 puntos.
 
 Criterios de puntuación por sección (aplícalos de forma consistente):
+- Foto de perfil: calidad visual, profesionalismo, coherencia con la marca personal
+- Banner: diseño, mensaje visual, coherencia con el posicionamiento profesional
 - Titular: claridad del valor, a quién va dirigido, diferencial comunicado
 - Acerca de: narrativa coherente, propuesta de valor clara, autenticidad
 - Experiencia: claridad de roles, logros cuantificables, progresión visible
@@ -34,12 +36,12 @@ Para CADA sección escribe EXACTAMENTE esto, una tras otra sin separadores:
 [Análisis en segunda persona]
 Ejemplo de optimización: "[ejemplo concreto y accionable]"
 
-Una vez escritas las 6 secciones (Titular, Acerca de, Experiencia, Educación, Aptitudes, Palabras clave), escribe en una línea nueva:
+Una vez escritas las 8 secciones (Foto de perfil, Banner, Titular, Acerca de, Experiencia, Educación, Aptitudes, Palabras clave), escribe en una línea nueva:
 Puntaje final: XX/60 puntos
 
 Inmediatamente después, en la siguiente línea, escribe el párrafo de cierre en segunda persona (máximo 250 caracteres). Una sola vez. No lo repitas dentro de ninguna sección.
 
-Secciones a evaluar en este orden: Titular, Acerca de, Experiencia, Educación, Aptitudes, Palabras clave
+Secciones a evaluar en este orden: Foto de perfil, Banner, Titular, Acerca de, Experiencia, Educación, Aptitudes, Palabras clave
 
 Instrucciones por sección:
 
@@ -66,6 +68,16 @@ EDUCACIÓN:
 APTITUDES:
 - Evalúa relevancia estratégica del conjunto según el posicionamiento del perfil
 - No menciones aptitudes específicas por su nombre ni cuántas hay en total
+
+FOTO DE PERFIL:
+- Evalúa la calidad visual, profesionalismo y coherencia con la marca personal
+- Considera: fondo, encuadre, expresión, vestimenta, iluminación
+- Si no hay foto o no se puede analizar, indica que no se pudo acceder a la imagen
+
+BANNER:
+- Evalúa el diseño, mensaje visual y coherencia con el posicionamiento profesional
+- Considera: colores, tipografía, mensaje, elementos visuales, coherencia de marca
+- Si no hay banner o no se puede analizar, indica que no se pudo acceder a la imagen
 
 PALABRAS CLAVE:
 - Evalúa si el perfil aprovecha palabras clave estratégicas para visibilidad en búsquedas de LinkedIn
@@ -202,7 +214,36 @@ Recomendaciones: ${recomendacionesData.length > 0 ? JSON.stringify(recomendacion
       return data.content?.[0]?.text || "";
     };
 
-    const diagnosis = await callClaude(SYSTEM_PROMPT, "Genera el análisis por secciones de este perfil de LinkedIn:\n\n" + profileSummary, 3000);
+    // Obtener URLs de foto y banner
+    const photoUrl = profile.photo || profile.profilePicture?.url || null;
+    const bannerUrl = profile.coverPicture?.url || null;
+
+    // Construir el mensaje con texto e imágenes para Claude
+    const userMessage = [];
+
+    // Texto principal
+    userMessage.push({
+      type: "text",
+      text: "Analiza visualmente la foto de perfil y el banner de LinkedIn que te comparto, y luego genera el análisis completo por secciones de este perfil:\n\n" + profileSummary
+    });
+
+    // Agregar foto si existe
+    if (photoUrl) {
+      userMessage.push({ type: "text", text: "\nFoto de perfil:" });
+      userMessage.push({ type: "image", source: { type: "url", url: photoUrl } });
+    } else {
+      userMessage.push({ type: "text", text: "\nFoto de perfil: No disponible" });
+    }
+
+    // Agregar banner si existe
+    if (bannerUrl) {
+      userMessage.push({ type: "text", text: "\nBanner:" });
+      userMessage.push({ type: "image", source: { type: "url", url: bannerUrl } });
+    } else {
+      userMessage.push({ type: "text", text: "\nBanner: No disponible" });
+    }
+
+    const diagnosis = await callClaude(SYSTEM_PROMPT, userMessage, 3500);
 
     return {
       statusCode: 200,
