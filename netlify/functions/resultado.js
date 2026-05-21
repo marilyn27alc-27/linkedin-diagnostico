@@ -70,14 +70,24 @@ APTITUDES:
 - No menciones aptitudes específicas por su nombre ni cuántas hay en total
 
 FOTO DE PERFIL:
-- Evalúa la calidad visual, profesionalismo y coherencia con la marca personal
-- Considera: fondo, encuadre, expresión, vestimenta, iluminación
-- Si no hay foto o no se puede analizar, indica que no se pudo acceder a la imagen
+- Evalúa: calidad y resolución, iluminación y nitidez, encuadre y cercanía del rostro, expresión facial y nivel de confianza/profesionalismo, vestimenta y coherencia con el sector, fondo y distracciones visuales
+- Interpreta el impacto estratégico: si genera cercanía, autoridad y credibilidad, y si es coherente con el objetivo profesional del perfil
+- No describas solo lo que ves; analiza el impacto estratégico que tiene en la percepción profesional
+- Tono esperado: "Tu foto transmite cercanía y profesionalismo, pero la iluminación y el fondo reducen el impacto visual. Una imagen con mejor contraste y un encuadre más cercano podría aumentar la percepción de autoridad y confianza."
+- Si no hay foto o no se puede analizar, indícalo claramente
 
 BANNER:
-- Evalúa el diseño, mensaje visual y coherencia con el posicionamiento profesional
-- Considera: colores, tipografía, mensaje, elementos visuales, coherencia de marca
-- Si no hay banner o no se puede analizar, indica que no se pudo acceder a la imagen
+- Evalúa: calidad visual y diseño, claridad del mensaje, si comunica qué hace la persona o cómo aporta valor, uso estratégico del espacio, jerarquía visual, legibilidad del texto, coherencia con la marca personal, uso de colores y elementos gráficos
+- Interpreta si el banner ayuda al posicionamiento o pasa desapercibido, y si complementa el titular y la propuesta de valor
+- No describas solo lo que ves; analiza el impacto estratégico
+- Tono esperado: "El banner tiene buena intención visual, pero actualmente funciona más como decoración que como herramienta estratégica. Podrías incluir una propuesta de valor clara y elementos que refuercen tu especialidad."
+- Si no hay banner o no se puede analizar, indícalo claramente
+
+Reglas para foto y banner:
+- Evita comentarios genéricos y halagos vacíos
+- Prioriza recomendaciones concretas y accionables
+- Enfócate en visibilidad, credibilidad, diferenciación y percepción profesional
+- Tono profesional, directo y constructivo
 
 PALABRAS CLAVE:
 - Evalúa si el perfil aprovecha palabras clave estratégicas para visibilidad en búsquedas de LinkedIn
