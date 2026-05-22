@@ -56,9 +56,14 @@ ACERCA DE:
 - No menciones quién es la persona ni su formación académica
 
 EXPERIENCIA:
-- Evalúa claridad de roles, logros y métricas de impacto
+- Analiza la experiencia desde una perspectiva estratégica de posicionamiento, credibilidad y autoridad, NO como reclutador tradicional
+- REGLA CRÍTICA: NO asumas que dos cargos similares pertenecen a la misma empresa. Analiza el nombre exacto de cada empresa, fechas y jerarquía antes de cualquier conclusión
+- Solo menciona posibles confusiones cuando existan cargos solapados dentro de la misma empresa sin diferenciación clara, o inconsistencias evidentes. Usa lenguaje prudente: "Podría generar cierta confusión…", "Sería útil aclarar…"
+- Prioriza las 2 a 4 experiencias más recientes y estratégicas. Menciona patrones generales del resto sin profundizar individualmente
+- Evalúa: claridad de la trayectoria, coherencia con el posicionamiento actual, evolución profesional, nivel de autoridad, presencia de logros, uso de descripciones, alineación con la propuesta de valor
+- NUNCA inventes métricas, resultados, clientes o logros. En lugar de "Incrementé ventas en 35%", di: "Podrías fortalecer esta experiencia incluyendo resultados concretos como crecimiento de clientes, alcance de proyectos o mejoras operativas"
+- El análisis debe sonar humano, profesional y directo. Interpreta el impacto estratégico, no solo lo que ves
 - No menciones cuántos roles hay en total
-- El ejemplo de optimización DEBE mencionar los 3 roles más recientes por su nombre de cargo y sugerir cómo mejorar cada uno con métricas concretas
 
 EDUCACIÓN:
 - Evalúa relevancia para el posicionamiento actual y nivel de detalle
