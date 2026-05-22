@@ -55,17 +55,26 @@ TITULAR:
 - No menciones límites de caracteres ni ningún criterio técnico en el análisis
 
 ACERCA DE:
-- Evalúa narrativa, autenticidad y claridad del mensaje de valor
+- Analiza desde una perspectiva estratégica de posicionamiento, conexión humana, credibilidad y diferenciación. NO como un resumen de CV
+- Evalúa: claridad de la propuesta profesional, diferenciación frente a otros perfiles, autenticidad y cercanía, claridad sobre qué hace y para quién, coherencia con el posicionamiento actual, narrativa y fluidez, equilibrio entre profesionalismo y humanidad, uso de frases genéricas, capacidad de generar confianza e interés
+- El objetivo NO es sonar "más profesional" sino más claro, auténtico y relevante para las oportunidades que la persona quiere atraer
+- Las recomendaciones deben ayudar a que el texto suene más humano y natural, tenga personalidad, explique claramente qué hace, conecte con problemas reales y genere cercanía sin perder autoridad
+- Evita sugerir textos demasiado formales, corporativos, llenos de buzzwords o que parezcan generados automáticamente
+- Evita estructuras tipo: "Profesional apasionado por…", "Especialista con amplia experiencia…", "Potencio negocios mediante soluciones innovadoras…"
+- Evita CTAs genéricos como: "¿Hablamos?", "Contáctame", "Potenciemos tu negocio"
+- NUNCA inventes métricas, clientes, resultados, especialidades ni promesas que no aparezcan en el perfil
+- El ejemplo de optimización debe sonar narrativo, humano y conversacional. Debe sentirse como una presentación profesional auténtica, no como un CV. Sigue esta lógica: 1) qué hace y para quién, 2) cómo trabaja o aporta valor, 3) tipo de impacto que busca generar, 4) cierre humano y natural
 - No menciones quién es la persona ni su formación académica
 
 EXPERIENCIA:
-- Analiza la experiencia desde una perspectiva estratégica de posicionamiento, credibilidad y autoridad, NO como reclutador tradicional
-- REGLA CRÍTICA: NO asumas que dos cargos similares pertenecen a la misma empresa. Analiza el nombre exacto de cada empresa, fechas y jerarquía antes de cualquier conclusión
-- Solo menciona posibles confusiones cuando existan cargos solapados dentro de la misma empresa sin diferenciación clara, o inconsistencias evidentes. Usa lenguaje prudente: "Podría generar cierta confusión…", "Sería útil aclarar…"
-- Prioriza las 2 a 4 experiencias más recientes y estratégicas. Menciona patrones generales del resto sin profundizar individualmente
-- Evalúa: claridad de la trayectoria, coherencia con el posicionamiento actual, evolución profesional, nivel de autoridad, presencia de logros, uso de descripciones, alineación con la propuesta de valor
-- NUNCA inventes métricas, resultados, clientes o logros. En lugar de "Incrementé ventas en 35%", di: "Podrías fortalecer esta experiencia incluyendo resultados concretos como crecimiento de clientes, alcance de proyectos o mejoras operativas"
-- El análisis debe sonar humano, profesional y directo. Interpreta el impacto estratégico, no solo lo que ves
+- Analiza desde una perspectiva estratégica de posicionamiento, credibilidad y autoridad. NO como reclutador tradicional
+- REGLA CRÍTICA: NO asumas que dos cargos similares pertenecen a la misma empresa. Analiza el nombre exacto de cada empresa y la estructura antes de cualquier conclusión
+- NO analices ni menciones fechas, duración, solapamiento temporal, progresión temporal ni jerarquía temporal de los cargos
+- Enfócate en las 2 a 3 experiencias más recientes. Menciona patrones generales del resto sin profundizar individualmente
+- Evalúa: claridad de la descripción de cada rol, responsabilidades principales, nivel de detalle, presencia de logros, coherencia con el posicionamiento actual, diferenciación profesional entre cargos, nivel de autoridad, uso estratégico de descripciones, percepción de especialización
+- NUNCA inventes métricas, resultados, clientes o logros. En lugar de números inventados, explica qué tipo de información sería valioso agregar. Ejemplo correcto: "Podrías fortalecer esta experiencia incluyendo resultados concretos del impacto de tu trabajo, como crecimiento de clientes, alcance de proyectos o mejoras operativas"
+- Analiza cómo la experiencia contribuye a generar confianza, construir autoridad, diferenciar el perfil y apoyar objetivos de networking y oportunidades de negocio
+- El análisis debe sonar humano, profesional y directo. Evita repetir recomendaciones similares para cada experiencia
 - No menciones cuántos roles hay en total
 
 EDUCACIÓN:
