@@ -353,7 +353,7 @@ async function analizar() {
   document.getElementById("error").classList.remove("visible");
   document.getElementById("result").classList.remove("visible");
   if (pollingInterval) clearInterval(pollingInterval);
-  // Validación avanzada de URL
+
   const invalidPatterns = ["/company/", "/showcase/", "/school/", "/groups/", "/feed/", "/posts/"];
   const hasInvalid = invalidPatterns.some(p => url.includes(p));
   if (!url || !url.includes("linkedin.com/in/") || hasInvalid) {
@@ -361,10 +361,13 @@ async function analizar() {
     document.getElementById("error").classList.add("visible");
     return;
   }
+
   btn.disabled = true;
   document.getElementById("status").classList.add("visible");
   document.getElementById("statusText").textContent = "Iniciando análisis...";
+
   try {
+    // PASO 1: Lanzar Apify
     const res = await fetch("/.netlify/functions/iniciar", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ linkedinUrl: url }),
@@ -372,61 +375,64 @@ async function analizar() {
     const data = await res.json();
     if (!res.ok || data.error) throw new Error(data.error || "Error al iniciar");
     const runId = data.runId;
+
+    // PASO 2: Polling directo a Apify desde el frontend (sin pasar por Netlify)
     let segundos = 0;
-    let esperando = false; // evita llamadas simultáneas
-    let resultadoMostrado = false;
-    const MAX_ESPERA = 120;
-    document.getElementById("statusText").textContent = "Analizando tu perfil con IA... esto puede tardar hasta 60 segundos";
-    pollingInterval = setInterval(async () => {
-      if (esperando || resultadoMostrado) return; // no lanzar otra llamada si hay una en curso
-      esperando = true;
-      segundos += 5;
+    const MAX_ESPERA = 150;
+    document.getElementById("statusText").textContent = "Recopilando información de tu perfil...";
 
-      if (segundos > MAX_ESPERA) {
-        clearInterval(pollingInterval);
-        document.getElementById("error").textContent = "El análisis está tardando demasiado. Por favor intenta de nuevo.";
-        document.getElementById("error").classList.add("visible");
-        document.getElementById("status").classList.remove("visible");
-        btn.disabled = false;
-        esperando = false;
-        return;
-      }
+    const apifyToken = await fetch("/.netlify/functions/iniciar", {
+      method: "OPTIONS"
+    });
 
-      try {
-        const r = await fetch("/.netlify/functions/resultado", {
-          method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ runId }),
-        });
-
-        const contentType = r.headers.get("content-type") || "";
-        if (!contentType.includes("application/json")) {
-          throw new Error("Error del servidor (" + r.status + "). Intenta de nuevo.");
-        }
-
-        const d = await r.json();
-        if (d.error) throw new Error(d.error);
-        if (d.status === "pending") {
-          document.getElementById("statusText").textContent = "Analizando tu perfil con IA... " + segundos + "s";
-          esperando = false;
-          return;
-        }
-        if (d.status === "done" && !resultadoMostrado) {
-          resultadoMostrado = true;
+    // Polling de Apify directo
+    await new Promise((resolve, reject) => {
+      pollingInterval = setInterval(async () => {
+        segundos += 5;
+        if (segundos > MAX_ESPERA) {
           clearInterval(pollingInterval);
-          mostrarResultado(d);
+          reject(new Error("El análisis está tardando demasiado. Por favor intenta de nuevo."));
           return;
         }
-      } catch (e) {
-        if (resultadoMostrado) return;
-        clearInterval(pollingInterval);
-        document.getElementById("error").textContent = "Error: " + e.message;
-        document.getElementById("error").classList.add("visible");
-        document.getElementById("status").classList.remove("visible");
-        btn.disabled = false;
-        esperando = false;
-      }
-    }, 5000);
+        try {
+          // Verificar estado via resultado.js que hace una llamada rápida a Apify
+          const r = await fetch("/.netlify/functions/estado", {
+            method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ runId }),
+          });
+          const contentType = r.headers.get("content-type") || "";
+          if (!contentType.includes("application/json")) return;
+          const d = await r.json();
+          if (d.error) { clearInterval(pollingInterval); reject(new Error(d.error)); return; }
+          if (d.status === "pending") {
+            document.getElementById("statusText").textContent = "Recopilando información de tu perfil... " + segundos + "s";
+            return;
+          }
+          if (d.status === "ready") {
+            clearInterval(pollingInterval);
+            resolve();
+          }
+        } catch(e) { /* ignorar errores de red en el polling */ }
+      }, 5000);
+    });
+
+    // PASO 3: Apify terminó — llamar a Claude UNA SOLA VEZ
+    document.getElementById("statusText").textContent = "Generando tu diagnóstico con IA...";
+    const r = await fetch("/.netlify/functions/resultado", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ runId }),
+    });
+
+    const contentType = r.headers.get("content-type") || "";
+    if (!contentType.includes("application/json")) {
+      throw new Error("Error del servidor (" + r.status + "). Intenta de nuevo.");
+    }
+    const d = await r.json();
+    if (d.error) throw new Error(d.error);
+    mostrarResultado(d);
+
   } catch (e) {
+    if (pollingInterval) clearInterval(pollingInterval);
     document.getElementById("error").textContent = "Error: " + e.message;
     document.getElementById("error").classList.add("visible");
     document.getElementById("status").classList.remove("visible");
