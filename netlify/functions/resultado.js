@@ -173,24 +173,16 @@ Restricciones absolutas de formato:
   try {
     const { runId } = JSON.parse(event.body);
 
-    const statusRes = await fetch(
-      `https://api.apify.com/v2/actor-runs/${runId}?token=${APIFY_TOKEN}`
-    );
-    const statusData = await statusRes.json();
-    const status = statusData.data?.status;
-
-    if (status === "RUNNING" || status === "READY" || status === "ABORTING") {
+    // Verificar caché primero
+    if (resultadoCache[runId]) {
       return {
         statusCode: 200,
         headers,
-        body: JSON.stringify({ status: "pending" }),
+        body: JSON.stringify(resultadoCache[runId]),
       };
     }
 
-    if (status !== "SUCCEEDED") {
-      throw new Error("El scraping fallo con estado: " + status);
-    }
-
+    // El frontend ya verificó que Apify terminó — solo descargamos los datos
     const itemsRes = await fetch(
       `https://api.apify.com/v2/actor-runs/${runId}/dataset/items?token=${APIFY_TOKEN}`
     );
@@ -219,15 +211,6 @@ Educacion: ${JSON.stringify(resumeEducation(educacionRaw))}
 Aptitudes: ${resumeSkills(aptitudesRaw)}
 Recomendaciones: ${recomendacionesData.length > 0 ? JSON.stringify(recomendacionesData) : "[]"}
     `.trim();
-
-    // Si ya tenemos el resultado para este runId, devolverlo directamente
-    if (resultadoCache[runId]) {
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify(resultadoCache[runId]),
-      };
-    }
 
     const callClaude = async (system, userContent, maxTokens = 2000) => {
       const res = await fetch("https://api.anthropic.com/v1/messages", {
