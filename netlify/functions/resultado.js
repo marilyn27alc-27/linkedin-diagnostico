@@ -1,3 +1,6 @@
+// Caché en memoria para evitar llamar a Claude múltiples veces por el mismo runId
+const resultadoCache = {};
+
 exports.handler = async function (event) {
   const headers = {
     "Access-Control-Allow-Origin": "*",
@@ -208,6 +211,15 @@ Aptitudes: ${resumeSkills(aptitudesRaw)}
 Recomendaciones: ${recomendacionesData.length > 0 ? JSON.stringify(recomendacionesData) : "[]"}
     `.trim();
 
+    // Si ya tenemos el resultado para este runId, devolverlo directamente
+    if (resultadoCache[runId]) {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify(resultadoCache[runId]),
+      };
+    }
+
     const callClaude = async (system, userContent, maxTokens = 2000) => {
       const res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
@@ -260,16 +272,21 @@ Recomendaciones: ${recomendacionesData.length > 0 ? JSON.stringify(recomendacion
 
     const diagnosis = await callClaude(SYSTEM_PROMPT, userMessage, 3500);
 
+    const resultado = {
+      status: "done",
+      name: fullName,
+      followers: profile.followerCount || profile.followersCount || "-",
+      connections: profile.connectionsCount || profile.connections || "-",
+      diagnosis,
+    };
+
+    // Guardar en caché para que polls posteriores no llamen a Claude de nuevo
+    resultadoCache[runId] = resultado;
+
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify({
-        status: "done",
-        name: fullName,
-        followers: profile.followerCount || profile.followersCount || "-",
-        connections: profile.connectionsCount || profile.connections || "-",
-        diagnosis,
-      }),
+      body: JSON.stringify(resultado),
     };
   } catch (e) {
     return {
